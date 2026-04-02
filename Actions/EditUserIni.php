@@ -7,7 +7,6 @@ use App\DTOs\DynamicForm;
 use App\Exceptions\SSHError;
 use App\SiteFeatures\Action;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class EditUserIni extends Action
 {
@@ -23,19 +22,10 @@ class EditUserIni extends Action
 
     public function form(): DynamicForm
     {
-        $content = '';
-
-        try {
-            $content = $this->site->server->os()->readFile($this->userIniPath());
-        } catch (SSHError) {
-            $content = '';
-        }
-
         return DynamicForm::make([
             DynamicField::make('user_ini_content')
                 ->textarea()
                 ->label('.user.ini')
-                ->default($content)
                 ->description('Edit the .user.ini file in the web directory. Changes take effect within 5 minutes (PHP user_ini.cache_ttl).'),
         ]);
     }
@@ -58,22 +48,26 @@ class EditUserIni extends Action
         }
 
         if (! str_contains($result, 'EXISTS')) {
-            $request->session()->flash('error', 'No .user.ini file found in the web directory.');
+            $request->session()->flash('error', 'No .user.ini file found. Use "Create" to create one first.');
 
             return;
         }
 
-        Validator::make($request->all(), [
-            'user_ini_content' => ['required', 'string'],
-        ])->validate();
+        $content = $request->input('user_ini_content');
 
-        $this->site->server->ssh()->write(
-            $path,
-            $request->input('user_ini_content'),
-            $this->site->user,
-        );
+        if ($content) {
+            $this->site->server->ssh()->write(
+                $path,
+                $content,
+                $this->site->user,
+            );
 
-        $request->session()->flash('success', '.user.ini updated successfully.');
+            $request->session()->flash('success', '.user.ini updated successfully.');
+
+            return;
+        }
+
+        $request->session()->flash('success', 'No changes made.');
     }
 
     private function userIniPath(): string
