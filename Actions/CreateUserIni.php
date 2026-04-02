@@ -2,18 +2,16 @@
 
 namespace App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions;
 
-use App\DTOs\DynamicField;
 use App\DTOs\DynamicForm;
 use App\Exceptions\SSHError;
 use App\SiteFeatures\Action;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class EditUserIni extends Action
+class CreateUserIni extends Action
 {
     public function name(): string
     {
-        return 'Edit .user.ini';
+        return 'Create .user.ini';
     }
 
     public function active(): bool
@@ -21,14 +19,9 @@ class EditUserIni extends Action
         return true;
     }
 
-    public function form(): DynamicForm
+    public function form(): ?DynamicForm
     {
-        return DynamicForm::make([
-            DynamicField::make('user_ini_content')
-                ->textarea()
-                ->label('.user.ini')
-                ->description('Edit the .user.ini file in the web directory. Changes take effect within 5 minutes (PHP user_ini.cache_ttl).'),
-        ]);
+        return null;
     }
 
     /**
@@ -48,23 +41,28 @@ class EditUserIni extends Action
             return;
         }
 
-        if (! str_contains($result, 'EXISTS')) {
-            $request->session()->flash('error', 'No .user.ini file found in the web directory.');
+        if (str_contains($result, 'EXISTS')) {
+            $request->session()->flash('error', '.user.ini already exists in the web directory.');
 
             return;
         }
 
-        Validator::make($request->all(), [
-            'user_ini_content' => ['required', 'string'],
-        ])->validate();
+        $defaultContent = implode("\n", [
+            'upload_max_filesize = 64M',
+            'post_max_size = 64M',
+            'memory_limit = 256M',
+            'max_execution_time = 300',
+            'max_input_time = 300',
+            'max_input_vars = 5000',
+        ]);
 
         $this->site->server->ssh()->write(
             $path,
-            $request->input('user_ini_content'),
+            $defaultContent,
             $this->site->user,
         );
 
-        $request->session()->flash('success', '.user.ini updated successfully.');
+        $request->session()->flash('success', '.user.ini created successfully.');
     }
 
     private function userIniPath(): string
