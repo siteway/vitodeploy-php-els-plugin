@@ -13,6 +13,7 @@ use App\Plugins\RegisterSiteFeature;
 use App\Plugins\RegisterSiteFeatureAction;
 use App\Plugins\RegisterSiteType;
 use App\Plugins\RegisterViews;
+use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\EditUserIni;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\InstallExtension;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\SetupRepository;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\UpdateElsPhpVersion;
@@ -127,6 +128,20 @@ class Plugin extends AbstractPlugin
                 }
             }
         });
+
+        if (! config('site.types.php-els-blank.features.edit-user-ini')) {
+            RegisterSiteFeature::make('php-els-blank', 'edit-user-ini')
+                ->label('Edit .user.ini')
+                ->description('Edit the .user.ini file in the site web directory')
+                ->register();
+        }
+
+        if (! config('site.types.php-els-blank.features.edit-user-ini.actions.edit')) {
+            RegisterSiteFeatureAction::make('php-els-blank', 'edit-user-ini', 'edit')
+                ->label('Save')
+                ->handler(EditUserIni::class)
+                ->register();
+        }
 
         if (! config('server.features.php-els.actions.install-extension')) {
             RegisterServerFeatureAction::make('php-els', 'install-extension')
