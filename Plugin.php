@@ -138,7 +138,7 @@ class Plugin extends AbstractPlugin
 
         if (! config('site.types.php-els-blank.features.edit-user-ini.actions.edit')) {
             RegisterSiteFeatureAction::make('php-els-blank', 'edit-user-ini', 'edit')
-                ->label('Save')
+                ->label('Edit')
                 ->handler(EditUserIni::class)
                 ->register();
         }
