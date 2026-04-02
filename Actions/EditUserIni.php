@@ -22,10 +22,19 @@ class EditUserIni extends Action
 
     public function form(): DynamicForm
     {
+        $content = '';
+
+        try {
+            $content = $this->site->server->os()->readFile($this->userIniPath());
+        } catch (SSHError) {
+            $content = '';
+        }
+
         return DynamicForm::make([
             DynamicField::make('user_ini_content')
                 ->textarea()
                 ->label('.user.ini')
+                ->default($content)
                 ->description('Edit the .user.ini file in the web directory. Changes take effect within 5 minutes (PHP user_ini.cache_ttl).'),
         ]);
     }
