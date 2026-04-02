@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Vito\Plugins\AhmedFaiyazBss\PhpEls;
+namespace App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin;
 
 use App\Exceptions\SSHCommandError;
 use App\Services\AbstractService;

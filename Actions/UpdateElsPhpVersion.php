@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Vito\Plugins\AhmedFaiyazBss\PhpEls\Actions;
+namespace App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions;
 
 use App\DTOs\DynamicField;
 use App\DTOs\DynamicForm;
 use App\Exceptions\SSHError;
 use App\Models\Service;
 use App\SiteFeatures\Action;
-use App\Vito\Plugins\AhmedFaiyazBss\PhpEls\PhpEls;
+use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\PhpEls;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;

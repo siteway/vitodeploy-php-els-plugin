@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Vito\Plugins\AhmedFaiyazBss\PhpEls;
+namespace App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin;
 
 use App\DTOs\DynamicField;
 use App\DTOs\DynamicForm;
@@ -13,9 +13,9 @@ use App\Plugins\RegisterSiteFeature;
 use App\Plugins\RegisterSiteFeatureAction;
 use App\Plugins\RegisterSiteType;
 use App\Plugins\RegisterViews;
-use App\Vito\Plugins\AhmedFaiyazBss\PhpEls\Actions\InstallExtension;
-use App\Vito\Plugins\AhmedFaiyazBss\PhpEls\Actions\SetupRepository;
-use App\Vito\Plugins\AhmedFaiyazBss\PhpEls\Actions\UpdateElsPhpVersion;
+use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\InstallExtension;
+use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\SetupRepository;
+use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\UpdateElsPhpVersion;
 
 class Plugin extends AbstractPlugin
 {
