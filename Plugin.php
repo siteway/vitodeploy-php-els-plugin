@@ -15,6 +15,7 @@ use App\Plugins\RegisterSiteType;
 use App\Plugins\RegisterViews;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\EditUserIni;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\InstallExtension;
+use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\RefreshUserIni;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\SetupRepository;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\UpdateElsPhpVersion;
 
@@ -140,6 +141,13 @@ class Plugin extends AbstractPlugin
             RegisterSiteFeatureAction::make('php-els-blank', 'user-ini', 'edit')
                 ->label('Edit')
                 ->handler(EditUserIni::class)
+                ->register();
+        }
+
+        if (! config('site.types.php-els-blank.features.user-ini.actions.refresh')) {
+            RegisterSiteFeatureAction::make('php-els-blank', 'user-ini', 'refresh')
+                ->label('Refresh')
+                ->handler(RefreshUserIni::class)
                 ->register();
         }
 
