@@ -22,12 +22,18 @@ class EditUserIni extends Action
 
     public function form(): DynamicForm
     {
-        $content = '';
+        $content = $this->site->type_data['user_ini_content'] ?? null;
 
-        try {
-            $content = $this->site->server->os()->readFile($this->userIniPath());
-        } catch (SSHError) {
-            $content = '';
+        if ($content === null) {
+            try {
+                $content = $this->site->server->os()->readFile($this->userIniPath());
+                $this->site->type_data = array_merge($this->site->type_data ?? [], [
+                    'user_ini_content' => $content,
+                ]);
+                $this->site->save();
+            } catch (SSHError) {
+                $content = '';
+            }
         }
 
         return DynamicForm::make([
@@ -56,13 +62,18 @@ class EditUserIni extends Action
             $this->site->server->ssh()->write(
                 $this->userIniPath(),
                 $content,
-                $this->site->user,
+                $this->site->user ?? $this->site->server->getSshUser(),
             );
         } catch (SSHError $e) {
             $request->session()->flash('error', 'Failed to write .user.ini: '.$e->getMessage());
 
             return;
         }
+
+        $this->site->type_data = array_merge($this->site->type_data ?? [], [
+            'user_ini_content' => $content,
+        ]);
+        $this->site->save();
 
         $request->session()->flash('success', '.user.ini updated successfully.');
     }
