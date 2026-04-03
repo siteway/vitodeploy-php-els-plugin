@@ -120,8 +120,23 @@ class Plugin extends AbstractPlugin
         // classes can't be autoloaded (namespace/path mismatch from GitHub install)
         config(['server.features.php-els.actions.setup-repo.active' => true]);
 
-        // Clean up FPM pool and isolated user when a php-els site is deleted
+        // Clean up server-side resources when a site is deleted.
+        // This works around the API controller calling $site->delete() directly
+        // instead of using the DeleteSite action, which skips nginx/FPM cleanup.
+        // Using deleteSite with try/catch makes it safe to run even if DeleteSite
+        // already cleaned up (files already gone = caught and ignored).
         Site::deleting(function (Site $site): void {
+            // Clean up nginx vhost (sites-available + sites-enabled)
+            $webserver = $site->server->webserver();
+            if ($webserver) {
+                try {
+                    $webserver->handler()->deleteSite($site);
+                } catch (\Throwable) {
+                    // Ignore — files may already be gone if DeleteSite ran first
+                }
+            }
+
+            // Clean up FPM pool and isolated user for php-els sites
             if ($site->isIsolated() && $site->type()->language() === 'php-els' && $site->php_version) {
                 $phpElsService = $site->server->service('php-els', $site->php_version);
                 if ($phpElsService) {
