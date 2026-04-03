@@ -44,39 +44,21 @@ class EditUserIni extends Action
      */
     public function handle(Request $request): void
     {
-        $path = $this->userIniPath();
-
-        try {
-            $result = $this->site->server->ssh()->exec(
-                'test -f '.escapeshellarg($path).' && echo "EXISTS"'
-            );
-        } catch (SSHError) {
-            $request->session()->flash('error', 'Failed to check .user.ini file.');
-
-            return;
-        }
-
-        if (! str_contains($result, 'EXISTS')) {
-            $request->session()->flash('error', 'No .user.ini file found. Use "Create" to create one first.');
-
-            return;
-        }
-
         $content = $request->input('user_ini_content');
 
-        if ($content) {
-            $this->site->server->ssh()->write(
-                $path,
-                $content,
-                $this->site->user,
-            );
-
-            $request->session()->flash('success', '.user.ini updated successfully.');
+        if (! $content) {
+            $request->session()->flash('success', 'No changes made.');
 
             return;
         }
 
-        $request->session()->flash('success', 'No changes made.');
+        $this->site->server->ssh()->write(
+            $this->userIniPath(),
+            $content,
+            $this->site->user,
+        );
+
+        $request->session()->flash('success', '.user.ini updated successfully.');
     }
 
     private function userIniPath(): string

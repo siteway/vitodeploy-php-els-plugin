@@ -13,7 +13,6 @@ use App\Plugins\RegisterSiteFeature;
 use App\Plugins\RegisterSiteFeatureAction;
 use App\Plugins\RegisterSiteType;
 use App\Plugins\RegisterViews;
-use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\CreateUserIni;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\EditUserIni;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\InstallExtension;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\SetupRepository;
@@ -133,14 +132,7 @@ class Plugin extends AbstractPlugin
         if (! config('site.types.php-els-blank.features.user-ini')) {
             RegisterSiteFeature::make('php-els-blank', 'user-ini')
                 ->label('.user.ini')
-                ->description('Create or edit the .user.ini file in the site web directory')
-                ->register();
-        }
-
-        if (! config('site.types.php-els-blank.features.user-ini.actions.create')) {
-            RegisterSiteFeatureAction::make('php-els-blank', 'user-ini', 'create')
-                ->label('Create')
-                ->handler(CreateUserIni::class)
+                ->description('Edit the .user.ini file in the site web directory')
                 ->register();
         }
 
