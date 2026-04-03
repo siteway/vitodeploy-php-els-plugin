@@ -120,13 +120,14 @@ class Plugin extends AbstractPlugin
         // classes can't be autoloaded (namespace/path mismatch from GitHub install)
         config(['server.features.php-els.actions.setup-repo.active' => true]);
 
-        // Clean up FPM pool config when a php-els site is deleted
+        // Clean up FPM pool and isolated user when a php-els site is deleted
         Site::deleting(function (Site $site): void {
             if ($site->isIsolated() && $site->type()->language() === 'php-els' && $site->php_version) {
                 $phpElsService = $site->server->service('php-els', $site->php_version);
                 if ($phpElsService) {
                     $phpElsService->handler()->removeFpmPool($site->user, $site->php_version, $site->id);
                 }
+                $site->server->os()->deleteIsolatedUser($site->user);
             }
         });
 
