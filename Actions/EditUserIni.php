@@ -52,11 +52,17 @@ class EditUserIni extends Action
             return;
         }
 
-        $this->site->server->ssh()->write(
-            $this->userIniPath(),
-            $content,
-            $this->site->user,
-        );
+        try {
+            $this->site->server->ssh()->write(
+                $this->userIniPath(),
+                $content,
+                $this->site->user,
+            );
+        } catch (SSHError $e) {
+            $request->session()->flash('error', 'Failed to write .user.ini: '.$e->getMessage());
+
+            return;
+        }
 
         $request->session()->flash('success', '.user.ini updated successfully.');
     }
