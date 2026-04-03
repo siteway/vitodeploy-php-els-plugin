@@ -11,7 +11,7 @@ class RefreshUserIni extends Action
 {
     public function name(): string
     {
-        return 'Refresh .user.ini';
+        return 'Sync .user.ini';
     }
 
     public function active(): bool

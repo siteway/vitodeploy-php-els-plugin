@@ -146,7 +146,7 @@ class Plugin extends AbstractPlugin
 
         if (! config('site.types.php-els-blank.features.user-ini.actions.refresh')) {
             RegisterSiteFeatureAction::make('php-els-blank', 'user-ini', 'refresh')
-                ->label('Refresh')
+                ->label('Sync')
                 ->handler(RefreshUserIni::class)
                 ->register();
         }
