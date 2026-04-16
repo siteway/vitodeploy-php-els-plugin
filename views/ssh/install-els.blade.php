@@ -11,6 +11,15 @@ if [ -d "$PHP_ETC/php.d.all" ]; then
     sudo cp "$PHP_ETC/php.d.all/"*.ini "$PHP_ETC/php.d/" 2>/dev/null
 fi
 
+# Comment out duplicate dom.so in xmlreader.ini and xsl.ini (already loaded by dom.ini)
+if [ -f "$PHP_ETC/php.d/dom.ini" ]; then
+    for _ini in "$PHP_ETC/php.d/xmlreader.ini" "$PHP_ETC/php.d/xsl.ini"; do
+        if [ -f "$_ini" ]; then
+            sudo sed -i 's|^extension=dom\.so|; extension=dom.so|' "$_ini"
+        fi
+    done
+fi
+
 # Create FPM pool config if none exists
 POOL_DIR="/opt/alt/php{{ $version }}/etc/php-fpm.d"
 if [ -z "$(ls -A $POOL_DIR/*.conf 2>/dev/null)" ]; then
