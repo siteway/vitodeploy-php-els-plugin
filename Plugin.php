@@ -14,9 +14,12 @@ use App\Plugins\RegisterSiteFeatureAction;
 use App\Plugins\RegisterSiteType;
 use App\Plugins\RegisterViews;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\EditUserIni;
+use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\BrowseExtensionIni;
+use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\EditExtensionIni;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\InstallExtension;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\RefreshUserIni;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\SetupRepository;
+use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\SyncExtensionIni;
 use App\Vito\Plugins\Siteway\VitodeployPhpElsPlugin\Actions\UpdateElsPhpVersion;
 
 class Plugin extends AbstractPlugin
@@ -194,6 +197,27 @@ class Plugin extends AbstractPlugin
                         ->placeholder('e.g. mysqlnd, xml, gd')
                         ->description('The extension package name (without the alt-phpXY- prefix)'),
                 ]))
+                ->register();
+        }
+
+        if (! config('server.features.php-els.actions.browse-ext-ini')) {
+            RegisterServerFeatureAction::make('php-els', 'browse-ext-ini')
+                ->label('Browse Extensions')
+                ->handler(BrowseExtensionIni::class)
+                ->register();
+        }
+
+        if (! config('server.features.php-els.actions.edit-ext-ini')) {
+            RegisterServerFeatureAction::make('php-els', 'edit-ext-ini')
+                ->label('Edit Extension INI')
+                ->handler(EditExtensionIni::class)
+                ->register();
+        }
+
+        if (! config('server.features.php-els.actions.sync-ext-ini')) {
+            RegisterServerFeatureAction::make('php-els', 'sync-ext-ini')
+                ->label('Sync Extension INI')
+                ->handler(SyncExtensionIni::class)
                 ->register();
         }
     }
