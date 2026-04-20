@@ -199,26 +199,27 @@ class Plugin extends AbstractPlugin
                 ]))
                 ->register();
         }
+        // Allows alt php extension management.
+        // Extension INI management — disabled (SSH file discovery slows down form rendering)
+        // if (! config('server.features.php-els.actions.browse-ext-ini')) {
+        //     RegisterServerFeatureAction::make('php-els', 'browse-ext-ini')
+        //         ->label('Browse Extensions')
+        //         ->handler(BrowseExtensionIni::class)
+        //         ->register();
+        // }
 
-        if (! config('server.features.php-els.actions.browse-ext-ini')) {
-            RegisterServerFeatureAction::make('php-els', 'browse-ext-ini')
-                ->label('Browse Extensions')
-                ->handler(BrowseExtensionIni::class)
-                ->register();
-        }
+        // if (! config('server.features.php-els.actions.edit-ext-ini')) {
+        //     RegisterServerFeatureAction::make('php-els', 'edit-ext-ini')
+        //         ->label('Edit Extension INI')
+        //         ->handler(EditExtensionIni::class)
+        //         ->register();
+        // }
 
-        if (! config('server.features.php-els.actions.edit-ext-ini')) {
-            RegisterServerFeatureAction::make('php-els', 'edit-ext-ini')
-                ->label('Edit Extension INI')
-                ->handler(EditExtensionIni::class)
-                ->register();
-        }
-
-        if (! config('server.features.php-els.actions.sync-ext-ini')) {
-            RegisterServerFeatureAction::make('php-els', 'sync-ext-ini')
-                ->label('Sync Extension INI')
-                ->handler(SyncExtensionIni::class)
-                ->register();
-        }
+        // if (! config('server.features.php-els.actions.sync-ext-ini')) {
+        //     RegisterServerFeatureAction::make('php-els', 'sync-ext-ini')
+        //         ->label('Sync Extension INI')
+        //         ->handler(SyncExtensionIni::class)
+        //         ->register();
+        // }
     }
 }
