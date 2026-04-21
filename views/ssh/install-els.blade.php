@@ -43,7 +43,8 @@ pm.max_requests = 500
 POOLEOF
 fi
 
-# Ensure socket directory exists
+# Ensure socket directory exists and survives reboots via tmpfiles.d
+echo "d /run/alt-php{{ $version }}-fpm 0755 root root -" | sudo tee /etc/tmpfiles.d/alt-php{{ $version }}-fpm.conf > /dev/null
 sudo mkdir -p /run/alt-php{{ $version }}-fpm
 
 sudo systemctl enable alt-php{{ $version }}-fpm
